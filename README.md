@@ -179,7 +179,7 @@ Jenkins → Manage Jenkins → Credentials
 
 🔄 Jenkins
 
-🟢 Node.js
+🟢 Java
 
 📊 Prometheus
 
