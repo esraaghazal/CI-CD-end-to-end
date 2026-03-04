@@ -36,7 +36,9 @@ Cluster setup includes:
 2 Worker Nodes (k8sworker1, k8sworker2)
 
 1️⃣ Set Hostnames
+
 2️⃣ Assign Static IP
+
 nmcli con mod "connection name" ipv4.method manual \
 ipv4.addresses 192.168.x.x/24 \
 ipv4.gateway 192.168.x.x \
@@ -44,14 +46,20 @@ ipv4.dns "192.168.2.254 8.8.8.8 8.8.4.4"
 
 nmcli con down "connection name"
 nmcli con up "connection name"
+
 3️⃣ Update /etc/hosts
+
 192.168.0.xxx k8smaster
 192.168.0.xxx k8sworker1
 192.168.0.xxx k8sworker2
+
 4️⃣ Disable SELinux
+
 setenforce 0
 sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+
 5️⃣ Disable Firewall & Configure Networking
+
 systemctl disable firewalld
 
 cat <<EOF | tee /etc/modules-load.d/k8s.conf
@@ -64,7 +72,9 @@ net.ipv4.ip_forward = 1
 EOF
 
 sysctl --system
+
 6️⃣ Install Kubernetes & Docker
+
 yum install kubeadm docker -y
 
 systemctl enable kubelet
@@ -72,12 +82,19 @@ systemctl start kubelet
 
 systemctl enable docker
 systemctl start docker
+
 7️⃣ Disable Swap
+
 swapoff -a
+
 8️⃣ Initialize Kubernetes Cluster
+
 kubeadm init
+
 9️⃣ Install Pod Network (Calico)
+
 kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
 🔟 Join Worker Nodes
 
 Run the kubeadm join command generated from the master node on each worker node.
@@ -122,11 +139,13 @@ Use Prometheus  Helm chart to deploy Prometheus to your cluster.
 Prometheus scrapes metrics from nodes, pods, and services.
 
 kubectl apply -f prometheus-deployment.yaml
+
 2️⃣ Install Grafana
 
 Deploy Grafana in the cluster and connect it to Prometheus as a data source.
 
 kubectl apply -f grafana-deployment.yaml
+
 3️⃣ Access Grafana
 
 Forward Grafana port:
@@ -134,6 +153,7 @@ Forward Grafana port:
 kubectl port-forward svc/grafana 3000:3000
 
 Login (default: admin/admin) and configure dashboards.
+
 
 4️⃣ Monitor Metrics
 
