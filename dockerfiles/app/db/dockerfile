@@ -1,0 +1,8 @@
+FROM mysql:8.0.33
+
+# save root pass & database name as an env variables 
+ENV MYSQL_ROOT_PASSWORD=vprodbpass
+ENV MYSQL_DATABASE=accounts
+
+# copy db from db file to /docker-entrypoint-initdb.d/ path which run any .sql files in mysql container
+ADD db_backup.sql /docker-entrypoint-initdb.d/db_backup.sql
