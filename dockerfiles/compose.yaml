@@ -1,0 +1,51 @@
+services:
+# build db container from dockerfile and pull it to docker hub
+  vprodb:
+    build:
+      context: ./Docker-files/db
+    image: esraaghazal/vprofiledb
+    container_name: vprodb
+    ports:
+      - "3306:3306"
+    volumes:
+      - vprodbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=vprodbpass
+  
+  vproapp:
+    build:
+      context: ./Docker-files/app
+    image: esraaghazal/vprofileapp
+    container_name: vproapp
+    ports:
+      - "8080:8080"
+    volumes:
+      - vproapp:/usr/local/tomcat/webapps
+
+  vproweb:
+    build:
+      context: ./Docker-files/web
+    image: esraaghazal/vprofileweb
+    container_name: vproweb
+    ports:
+      - "80:80"
+
+  vprocach01:
+    image: memcache:latest
+    container_name: vprocach01
+    ports:
+      - "11211:11211"
+  
+  vpromq01:
+    image: rabbitmq:latest
+    container_name: vpromq01
+    ports:
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    
+volumes:
+  vprodbdata: {}
+  vproappdata: {}
+  
