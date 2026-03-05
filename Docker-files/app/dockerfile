@@ -1,0 +1,13 @@
+# build a maven container that convert pom.xml to a war backage 
+FROM maven:3.9.9-eclipse-temurin-21-jammy AS BUILD_IMAGE 
+RUN git clone https://github.com/devopshydclub/vprofile-project.git 
+# go to the project file and run mvn install 
+RUN cd vprofile-project && cd K8sDeployApp && mvn install 
+
+FROM tomcat:10-jdk21 
+RUN rm -rf /usr/local/tomcat/webapps/* 
+# copy war file from maven container to start deploy 
+COPY --from=BUILD_IMAGE K8sDeployApp/target/vprofile-v2.war /usr/local/tomcat/webapps/ROOT.war 
+EXPOSE 8080 
+# run catalina script to start tomcat 
+CMD ["catalina.sh","run"]
