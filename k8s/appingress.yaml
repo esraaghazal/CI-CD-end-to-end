@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vpro-ingress
+  annotations:
+  # addetional settings to ingress to announce that we will use regix in path name
+    nginx.ingress.kubernetes.io/use-regex: "true"
+
+spec:
+  ingressClassName: nginx
+  rules:
+ # - host: vprofile.hkhinfoteck.xyz
+    http:
+      paths:
+      - pathType: Prefix
+      # any request comming on this path forwared it to vproapp service
+        path: "/"
+        backend:
+          service:
+            name: vproapp-service
+            port: 
+              number: 8080
