@@ -1,13 +1,13 @@
-# memcached service
+# app service
 apiVersion: v1
 kind: Service
 metadata:
-  name: vprocache01
+  name: vproapp-service
 spec:
   selector:
-    app: vpromc
+    app: vproapp
   ports:
-  - port: 11211
-    targetPort: vpromc-port
+  - port: 8080
+    targetPort: 8080
     protocol: TCP
   type: ClusterIP

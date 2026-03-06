@@ -1,3 +1,4 @@
+# db deployment without PV/PVC
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,10 +6,10 @@ metadata:
   labels:
     app: vprodb
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: vprodb
-  replicas: 1
   template:
     metadata:
       labels:
@@ -16,12 +17,9 @@ spec:
     spec:
       containers:
       - name: vprodb
-        image: esraaghazal/vprofiledb
-        volumeMounts:
-        - mountPath: /var/lib/mysql
-          name: vpro-db-data
+        image: vprocontainers/vprofiledb
         ports:
-        - name: vpro-db-data
+        - name: vprodb-port
           containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -29,8 +27,3 @@ spec:
             secretKeyRef:
               name: app-secret
               key: db-pass
-      # attach a PersistentVolumeClaim to the pv
-      volumes: 
-      - name: vpro-db-data
-        persistentVolumeClaim:
-          claimName: db-pv-claim
