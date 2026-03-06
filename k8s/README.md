@@ -3,7 +3,7 @@ Overview
 
 This project demonstrates a full-stack VProfile application deployed on a Kubernetes cluster. It includes all key components of a modern cloud-native application:
 
-Database: MySQL with persistent storage
+Database: MySQL 
 
 Cache: Memcached
 
@@ -29,8 +29,6 @@ Components and Interactions:
 
 
 Secrets: app-secret stores DB and RabbitMQ credentials securely.
-
-PersistentVolumeClaim (PVC) ensures MySQL data persists.
 
 ClusterIP Services allow internal communication.
 
