@@ -23,7 +23,8 @@ This setup provides a complete example of multi-tier application deployment in K
 
 Components and Interactions:
 
-<img width="1585" height="776" alt="image" src="https://github.com/user-attachments/assets/f83395c9-17c6-4325-8e30-8e8d4ba70ceb" />
+<img width="1065" height="606" alt="image" src="https://github.com/user-attachments/assets/a94aa257-b026-425b-ad51-0dc0baab9682" />
+
 
 
 
