@@ -1,187 +1,81 @@
-# CI-CD-end-to-end
+# CI/CD Pipeline for Kubernetes Deployment using Jenkins with Monitoring
+Project Overview
 
-CI/CD Pipeline for Kubernetes Deployment using Jenkins and monitoring using Prometheus and Grafana
+This project demonstrates a complete End-to-End CI/CD pipeline for deploying an application to a Kubernetes cluster using Jenkins, Docker, and Helm, with Prometheus and Grafana for monitoring.
 
-## Project Overview
+The pipeline automates the full software delivery lifecycle starting from code commit by the developer until deployment and monitoring inside the Kubernetes cluster.
 
-This project demonstrates how to build a complete CI/CD pipeline that integrates:
+The project integrates the following tools:
 
- Docker for containerization
+Docker for containerization
 
- Kubernetes for container orchestration
+Jenkins for CI/CD automation
 
- Jenkins for CI/CD automation
+Kubernetes for container orchestration
 
- Prometheus and Grafana for monitoring
+Helm for Kubernetes package management
 
-The pipeline automatically:
+Prometheus for metrics collection
 
-Clones the source code
-
-Builds a Docker image
-
-Pushes the image to Docker Hub
-
-Deploys the application to a Kubernetes cluster
+Grafana for metrics visualization
 
 # Project Architecture
-Developer → GitHub → Jenkins Pipeline → Docker Build & Push → Kubernetes Cluster → Prometheus & Grafana
+
+The following architecture represents the CI/CD workflow used in this project.
+
+Pipeline Flow:
+
+Developer → GitHub → Jenkins Pipeline → Docker Build → Docker Hub → Helm Deployment → Kubernetes Cluster → Prometheus & Grafana Monitoring
+
+<img width="1914" height="832" alt="cicd" src="https://github.com/user-attachments/assets/cb9fd97d-0c95-4ae7-8459-80f4e903bdc3" />
+
 
 # Kubernetes Cluster Setup (kubeadm)
 
-Cluster setup includes:
+The Kubernetes cluster is created using kubeadm and contains:
 
-1 Master Node (k8smaster)
-
-2 Worker Nodes (k8sworker1, k8sworker2)
-
-1️⃣ Set Hostnames
-
-2️⃣ Assign Static IP
-
-nmcli con mod "connection name" ipv4.method manual \
-ipv4.addresses 192.168.x.x/24 \
-ipv4.gateway 192.168.x.x \
-ipv4.dns "192.168.2.254 8.8.8.8 8.8.4.4"
-
-nmcli con down "connection name"
-nmcli con up "connection name"
-
-3️⃣ Update /etc/hosts
-
-192.168.0.xxx k8smaster
-192.168.0.xxx k8sworker1
-192.168.0.xxx k8sworker2
-
-4️⃣ Disable SELinux
-
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-
-5️⃣ Disable Firewall & Configure Networking
-
-systemctl disable firewalld
-
-cat <<EOF | tee /etc/modules-load.d/k8s.conf
-br_netfilter
-EOF
-
-cat <<EOF | tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
-
-sysctl --system
-
-6️⃣ Install Kubernetes & Docker
-
-yum install kubeadm docker -y
-
-systemctl enable kubelet
-systemctl start kubelet
-
-systemctl enable docker
-systemctl start docker
-
-7️⃣ Disable Swap
-
-swapoff -a
-
-8️⃣ Initialize Kubernetes Cluster
-
-kubeadm init
-
-9️⃣ Install Pod Network (Calico)
-
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
-
-🔟 Join Worker Nodes
-
-Run the kubeadm join command generated from the master node on each worker node.
-
- # Run Jenkins in Docker
-docker run -u 0 --privileged \
---name jenkins \
--it -d \
--p 8080:8080 \
--p 50000:50000 \
--v /var/run/docker.sock:/var/run/docker.sock \
--v $(which docker):/usr/bin/docker \
--v /home/jenkins_home:/var/jenkins_home \
-jenkins/jenkins:latest
-
- # Application Deployment
-
-Jenkins pipeline deploys a Node.js application:
-
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
-# Jenkins Pipeline Stages
-
-Clone Source Code – Pull code from GitHub
-
-Build Docker Image – docker.build("username/nodeapp")
-
-Login to Docker Hub – Using Jenkins stored credentials
-
-Push Image – Push built image to Docker Hub
-
-Deploy to Kubernetes – Apply deployment & service manifests
+Node	Role
+k8smaster	Master Node
+k8sworker1	Worker Node
+k8sworker2	Worker Node
 
 # Monitoring Kubernetes Cluster
 
-Monitor cluster health and application metrics using Prometheus and Grafana.
+The Kubernetes cluster is monitored using Prometheus and Grafana, both deployed using Helm charts.
 
-1️⃣ Install Prometheus
+ Install Prometheus using Helm
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 
-Use Prometheus  Helm chart to deploy Prometheus to your cluster.
+Install Prometheus stack
 
-Prometheus scrapes metrics from nodes, pods, and services.
+helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
 
-kubectl apply -f prometheus-deployment.yaml
+Prometheus collects metrics from:
 
-2️⃣ Install Grafana
+Cluster components (Kubernetes Nodes Pods Services)
 
-Deploy Grafana in the cluster and connect it to Prometheus as a data source.
+Install Grafana
 
-kubectl apply -f grafana-deployment.yaml
+Grafana is included in the kube-prometheus-stack Helm chart.
 
-3️⃣ Access Grafana
+Access Grafana using port forwarding:
 
-Forward Grafana port:
+kubectl port-forward svc/prometheus-grafana 3000:80
 
-kubectl port-forward svc/grafana 3000:3000
+Open in browser:
 
-Login (default: admin/admin) and configure dashboards.
+http://localhost:3000
+
+Default login:
+
+username: admin
+password: admin
+Metrics Monitored
+
+Prometheus collects metrics and Grafana visualizes them in dashboards.
 
 
-4️⃣ Monitor Metrics
-
-Node and Pod CPU/Memory usage
-
-Kubernetes cluster health
-
-Application response times
-
-Prometheus collects metrics, and Grafana visualizes them in real-time dashboards.
-
-# Credentials Management
-
-Docker Hub credentials are securely stored inside Jenkins:
-
-Jenkins → Manage Jenkins → Credentials
-
-# Technologies Used
-
-🐳 Docker
-
-☸️ Kubernetes (kubeadm)
-
-🔄 Jenkins
-
-🟢 Java
-
-📊 Prometheus
-
-📈 Grafana
-
+k8smaster	Master Node
+k8sworker1	Worker Node
+k8sworker2	Worker Node
