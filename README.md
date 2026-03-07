@@ -27,7 +27,8 @@ Pipeline Flow:
 
 Developer → GitHub → Jenkins Pipeline → Docker Build → Docker Hub → Helm Deployment → Kubernetes Cluster → Prometheus & Grafana Monitoring
 
-<img width="1914" height="832" alt="cicd" src="https://github.com/user-attachments/assets/cb9fd97d-0c95-4ae7-8459-80f4e903bdc3" />
+<img width="1115" height="581" alt="image" src="https://github.com/user-attachments/assets/71726387-e695-4b83-9ad5-1417b025ea6b" />
+
 
 
 # Kubernetes Cluster Setup (kubeadm)
