@@ -26,7 +26,9 @@ The following architecture represents the CI/CD workflow used in this project.
 Pipeline Flow:
 
 Developer → GitHub → Jenkins Pipeline → Docker Build → Docker Hub → Helm Deployment → Kubernetes Cluster → Prometheus & Grafana Monitoring
-<img width="1604" height="261" alt="image" src="https://github.com/user-attachments/assets/2f0479ed-f43b-45a7-abf0-ac752a160c8f" />
+
+<img width="1644" height="418" alt="image" src="https://github.com/user-attachments/assets/757cb954-859b-4681-b7bd-f1ffa1a4e0f0" />
+
 
 <img width="1115" height="581" alt="image" src="https://github.com/user-attachments/assets/71726387-e695-4b83-9ad5-1417b025ea6b" />
 
