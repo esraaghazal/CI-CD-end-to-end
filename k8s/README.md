@@ -18,6 +18,9 @@ The application consists of the following components:
 * **Memcached** – Used for caching
 * **RabbitMQ** – Messaging service for asynchronous communication
 
+  <img width="1019" height="708" alt="image" src="https://github.com/user-attachments/assets/6127d28e-6289-4d5e-bd3e-e0d97bd25406" />
+
+
 All components communicate internally inside the Kubernetes cluster using **ClusterIP services**, while the application is exposed externally using a **LoadBalancer service**.
 
 ---
