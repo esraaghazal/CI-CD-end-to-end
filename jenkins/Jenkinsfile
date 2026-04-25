@@ -46,17 +46,6 @@ pipeline {
         }
 
 
-        // run code analysis using checkstyle plugin and generate reports, you can also fail the build if any violation is found
-        stage ('CODE ANALYSIS WITH CHECKSTYLE'){
-            steps {
-                sh 'mvn checkstyle:checkstyle'
-            }
-            post {
-                success {
-                    echo 'Generated Analysis Result'
-                }
-            }
-        }
 
         // build docker image using dockerfile in the project git hub repository
         stage('Building image') {
